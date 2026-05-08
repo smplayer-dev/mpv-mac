@@ -9,7 +9,7 @@ myconf=(
     -Dwrap_mode=nodownload
     -Dlibmpv=true
     -Diconv=enabled
-    -Dsubrandr=enabled
+    #-Dsubrandr=enabled
     -Dmanpage-build=disabled
     -Dswift-flags="-target $ARCHS-apple-macosx11.0"
 )
@@ -29,7 +29,7 @@ fi
 LDFLAGS+=" -Wl,-no_compact_unwind"
 cd $PACKAGES
 #git clone https://github.com/mpv-player/mpv.git
-git clone --branch v0.41.0 --depth 1 https://github.com/mpv-player/mpv.git
+git clone --branch v0.41.0 https://github.com/mpv-player/mpv.git
 cd mpv
 #汉化select.lua菜单项
 #sed -i "" 's|"Subtitles",|"字幕轨",|g' player/lua/select.lua
