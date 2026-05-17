@@ -1,7 +1,7 @@
-diff -urN mpv-orig/meson.build mpv-master/meson.build
---- mpv-orig/meson.build	2026-05-08 12:06:25.000000000 +0200
-+++ mpv-master/meson.build	2026-05-08 13:50:25.697338733 +0200
-@@ -428,6 +428,7 @@
+diff -urN mpv-orig/meson.build mpv-release-0.41/meson.build
+--- mpv-orig/meson.build	2025-12-21 20:08:20.000000000 +0100
++++ mpv-release-0.41/meson.build	2026-05-17 12:58:34.676358301 +0200
+@@ -417,6 +417,7 @@
      sources += files('osdep/language-mac.c',
                       'osdep/utils-mac.c',
                       'osdep/mac/app_bridge.m',
@@ -9,7 +9,7 @@ diff -urN mpv-orig/meson.build mpv-master/meson.build
                       'player/clipboard/clipboard-mac.m')
      main_fn_source = files('osdep/main-fn-mac.c')
  endif
-@@ -441,6 +442,7 @@
+@@ -430,6 +431,7 @@
      sources += files('input/ipc-unix.c',
                       'osdep/poll_wrapper.c',
                       'osdep/terminal-unix.c',
@@ -17,9 +17,9 @@ diff -urN mpv-orig/meson.build mpv-master/meson.build
                       'sub/filter_regex.c')
  endif
  
-diff -urN mpv-orig/video/out/vo.c mpv-master/video/out/vo.c
---- mpv-orig/video/out/vo.c	2026-05-08 12:06:25.000000000 +0200
-+++ mpv-master/video/out/vo.c	2026-05-08 13:50:25.697338733 +0200
+diff -urN mpv-orig/video/out/vo.c mpv-release-0.41/video/out/vo.c
+--- mpv-orig/video/out/vo.c	2025-12-21 20:08:20.000000000 +0100
++++ mpv-release-0.41/video/out/vo.c	2026-05-17 12:58:34.676358301 +0200
 @@ -66,6 +66,8 @@
  extern const struct vo_driver video_out_tct;
  extern const struct vo_driver video_out_sixel;
@@ -42,9 +42,9 @@ diff -urN mpv-orig/video/out/vo.c mpv-master/video/out/vo.c
  };
  
  struct vo_internal {
-diff -urN mpv-orig/video/out/vo_sharedbuffer.h mpv-master/video/out/vo_sharedbuffer.h
+diff -urN mpv-orig/video/out/vo_sharedbuffer.h mpv-release-0.41/video/out/vo_sharedbuffer.h
 --- mpv-orig/video/out/vo_sharedbuffer.h	1970-01-01 01:00:00.000000000 +0100
-+++ mpv-master/video/out/vo_sharedbuffer.h	2026-05-08 13:50:25.697338733 +0200
++++ mpv-release-0.41/video/out/vo_sharedbuffer.h	2026-05-17 12:58:34.676358301 +0200
 @@ -0,0 +1,37 @@
 +/*
 + * OSX Shared Buffer Video Output (extracted from mplayer's corevideo)
@@ -83,9 +83,9 @@ diff -urN mpv-orig/video/out/vo_sharedbuffer.h mpv-master/video/out/vo_sharedbuf
 +@end
 +
 +#endif /* MPLAYER_VO_OSX_SHAREDBUFFER_H */
-diff -urN mpv-orig/video/out/vo_sharedbuffer.m mpv-master/video/out/vo_sharedbuffer.m
+diff -urN mpv-orig/video/out/vo_sharedbuffer.m mpv-release-0.41/video/out/vo_sharedbuffer.m
 --- mpv-orig/video/out/vo_sharedbuffer.m	1970-01-01 01:00:00.000000000 +0100
-+++ mpv-master/video/out/vo_sharedbuffer.m	2026-05-08 13:51:16.135253085 +0200
++++ mpv-release-0.41/video/out/vo_sharedbuffer.m	2026-05-17 12:58:34.676358301 +0200
 @@ -0,0 +1,258 @@
 +/*
 + * OSX Shared Buffer Video Output (extracted from mplayer's corevideo)
@@ -345,10 +345,10 @@ diff -urN mpv-orig/video/out/vo_sharedbuffer.m mpv-master/video/out/vo_sharedbuf
 +    },
 +    .options_prefix = "sharedbuffer",
 +};
-diff -urN mpv-orig/video/out/vo_shm.c mpv-master/video/out/vo_shm.c
+diff -urN mpv-orig/video/out/vo_shm.c mpv-release-0.41/video/out/vo_shm.c
 --- mpv-orig/video/out/vo_shm.c	1970-01-01 01:00:00.000000000 +0100
-+++ mpv-master/video/out/vo_shm.c	2026-05-08 13:51:07.671000860 +0200
-@@ -0,0 +1,285 @@
++++ mpv-release-0.41/video/out/vo_shm.c	2026-05-17 12:59:05.722447840 +0200
+@@ -0,0 +1,289 @@
 +/*
 + * Shm video output driver
 + * Copyright (c) 2021 Ricardo Villalba <ricardo@smplayer.info>
@@ -535,10 +535,12 @@ diff -urN mpv-orig/video/out/vo_shm.c mpv-master/video/out/vo_shm.c
 +
 +    struct priv * p = vo->priv;
 +
++    /*
 +    MP_INFO(vo, "mpi->stride[0]=%d [1]=%d [2]=%d\n",
 +            mpi->stride[0], mpi->stride[1], mpi->stride[2]);
 +    MP_INFO(vo, "mpi->planes[0]=%p [1]=%p [2]=%p\n",
 +            mpi->planes[0], mpi->planes[1], mpi->planes[2]);
++    */
 +
 +    header->width = p->image_width;
 +    header->height = p->image_height;
@@ -600,8 +602,10 @@ diff -urN mpv-orig/video/out/vo_shm.c mpv-master/video/out/vo_shm.c
 +    switch(format)
 +    {
 +        case IMGFMT_420P:
++        //case IMGFMT_NV12:
 +        case IMGFMT_UYVY:
 +        case IMGFMT_RGB24:
++        //case IMGFMT_RGB565:
 +            return 1;
 +    }
 +    return 0;
