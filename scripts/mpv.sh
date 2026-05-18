@@ -31,7 +31,7 @@ cd $PACKAGES
 #git clone https://github.com/mpv-player/mpv.git
 git clone --branch v0.41.0 https://github.com/mpv-player/mpv.git
 cd mpv
-patch -p1 < $DIR/parche_mpv3.diff
+patch -p1 < $DIR/parche_mpv.diff
 #汉化select.lua菜单项
 #sed -i "" 's|"Subtitles",|"字幕轨",|g' player/lua/select.lua
 #sed -i "" 's|"Secondary subtitles",|"次字幕",|g' player/lua/select.lua

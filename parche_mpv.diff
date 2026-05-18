@@ -1,6 +1,6 @@
 diff -urN mpv-orig/meson.build mpv-release-0.41/meson.build
 --- mpv-orig/meson.build	2025-12-21 20:08:20.000000000 +0100
-+++ mpv-release-0.41/meson.build	2026-05-17 12:58:34.676358301 +0200
++++ mpv-release-0.41/meson.build	2026-05-18 14:12:16.193228714 +0200
 @@ -417,6 +417,7 @@
      sources += files('osdep/language-mac.c',
                       'osdep/utils-mac.c',
@@ -19,7 +19,7 @@ diff -urN mpv-orig/meson.build mpv-release-0.41/meson.build
  
 diff -urN mpv-orig/video/out/vo.c mpv-release-0.41/video/out/vo.c
 --- mpv-orig/video/out/vo.c	2025-12-21 20:08:20.000000000 +0100
-+++ mpv-release-0.41/video/out/vo.c	2026-05-17 12:58:34.676358301 +0200
++++ mpv-release-0.41/video/out/vo.c	2026-05-18 14:12:16.193228714 +0200
 @@ -66,6 +66,8 @@
  extern const struct vo_driver video_out_tct;
  extern const struct vo_driver video_out_sixel;
@@ -44,7 +44,7 @@ diff -urN mpv-orig/video/out/vo.c mpv-release-0.41/video/out/vo.c
  struct vo_internal {
 diff -urN mpv-orig/video/out/vo_sharedbuffer.h mpv-release-0.41/video/out/vo_sharedbuffer.h
 --- mpv-orig/video/out/vo_sharedbuffer.h	1970-01-01 01:00:00.000000000 +0100
-+++ mpv-release-0.41/video/out/vo_sharedbuffer.h	2026-05-17 12:58:34.676358301 +0200
++++ mpv-release-0.41/video/out/vo_sharedbuffer.h	2026-05-18 14:12:16.193228714 +0200
 @@ -0,0 +1,37 @@
 +/*
 + * OSX Shared Buffer Video Output (extracted from mplayer's corevideo)
@@ -85,7 +85,7 @@ diff -urN mpv-orig/video/out/vo_sharedbuffer.h mpv-release-0.41/video/out/vo_sha
 +#endif /* MPLAYER_VO_OSX_SHAREDBUFFER_H */
 diff -urN mpv-orig/video/out/vo_sharedbuffer.m mpv-release-0.41/video/out/vo_sharedbuffer.m
 --- mpv-orig/video/out/vo_sharedbuffer.m	1970-01-01 01:00:00.000000000 +0100
-+++ mpv-release-0.41/video/out/vo_sharedbuffer.m	2026-05-17 12:58:34.676358301 +0200
++++ mpv-release-0.41/video/out/vo_sharedbuffer.m	2026-05-18 14:12:16.193228714 +0200
 @@ -0,0 +1,258 @@
 +/*
 + * OSX Shared Buffer Video Output (extracted from mplayer's corevideo)
@@ -347,8 +347,8 @@ diff -urN mpv-orig/video/out/vo_sharedbuffer.m mpv-release-0.41/video/out/vo_sha
 +};
 diff -urN mpv-orig/video/out/vo_shm.c mpv-release-0.41/video/out/vo_shm.c
 --- mpv-orig/video/out/vo_shm.c	1970-01-01 01:00:00.000000000 +0100
-+++ mpv-release-0.41/video/out/vo_shm.c	2026-05-17 12:59:05.722447840 +0200
-@@ -0,0 +1,289 @@
++++ mpv-release-0.41/video/out/vo_shm.c	2026-05-18 14:13:00.208410307 +0200
+@@ -0,0 +1,301 @@
 +/*
 + * Shm video output driver
 + * Copyright (c) 2021 Ricardo Villalba <ricardo@smplayer.info>
@@ -434,6 +434,18 @@ diff -urN mpv-orig/video/out/vo_shm.c mpv-release-0.41/video/out/vo_shm.c
 +    }
 +}
 +
++static int32_t map_primaries(enum pl_color_primaries p) {
++    switch (p) {
++        case PL_COLOR_PRIM_BT_601_525: return 1;
++        case PL_COLOR_PRIM_BT_601_625: return 2;
++        case PL_COLOR_PRIM_BT_709:     return 3;
++        case PL_COLOR_PRIM_BT_2020:    return 4;
++        case PL_COLOR_PRIM_BT_470M:    return 5;
++        case PL_COLOR_PRIM_EBU_3213:   return 6;
++        default:                       return 0;
++    }
++}
++
 +static int reconfig(struct vo *vo, struct mp_image_params *params)
 +{
 +    MP_INFO(vo, "reconfig: w: %d h: %d format: %d \n", params->w, params->h, params->imgfmt);
@@ -514,7 +526,7 @@ diff -urN mpv-orig/video/out/vo_shm.c mpv-release-0.41/video/out/vo_shm.c
 +    header->colorspace         = params->repr.sys;
 +    header->colorspace_levels  = params->repr.levels;
 +    // color.primaries y color.transfer son los nuevos nombres en pl_color_space
-+    header->colorspace_primaries = params->color.primaries;
++    header->colorspace_primaries =  map_primaries(params->color.primaries);
 +    header->colorspace_gamma     = params->color.transfer;  // antes "gamma"
 +    // mp_csp_light sigue en mp_image_params directamente
 +    header->colorspace_light     = params->light;
